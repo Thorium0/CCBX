@@ -126,7 +126,8 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (explosive == null) return "";
 
-        return explosive.getDisplayName().getString();
+        return explosive.getItem().getDefaultInstance().getDisplayName().getString()
+                .replace("[", "").replace("]", "");
     }
 
     @LuaFunction(mainThread = true)
@@ -154,7 +155,8 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (missile == null) return "";
 
-        return missile.getDisplayName().getString();
+        return missile.getItem().getDefaultInstance().getDisplayName().getString()
+                .replace("[", "").replace("]", "");
     }
 
     @LuaFunction(mainThread = true)

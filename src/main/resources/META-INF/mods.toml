@@ -7,15 +7,14 @@ logoFile = "pack.png"
 [[mods]] #mandatory
 # The modid of the mod
 modId = "ccbx" #mandatory
-version = "1.0" #mandatory
+version = "${file.jarVersion}" #mandatory
 authors= "Presti"
 # A display name for the mod
-displayName = "CC: BallistX" #mandatory
+displayName = "CC: BallistiX" #mandatory
 displayURL = "https://presti.me"
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
- A mod that adds a peripheral for CC: Tweaked to allow control over BallistX silos.
-'''
+A mod that adds a peripheral for CC: Tweaked to allow control over BallistiX silos.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.ccbx]] #optional
 # the modid of the dependency

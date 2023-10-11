@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'de.presti.ccbx'
-version = '1.0'
+version = '1.1'
 archivesBaseName = 'ccbx'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -93,7 +93,7 @@ dependencies {
 
     implementation fg.deobf("org.squiddev:cc-tweaked-1.19.2:${cc_version}")
     implementation fg.deobf("curse.maven:ballistix-443915:${ballistx_version}")
-    implementation fg.deobf("curse.maven:electrodynamics-316867:4518028")
+    implementation fg.deobf("curse.maven:electrodynamics-316867:${electrodynamics_version}")
 
 }
 
