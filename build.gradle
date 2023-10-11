@@ -10,9 +10,9 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle'
 
-group = 'de.srendi.cctutorial'
+group = 'de.presti.ccbx'
 version = '1.0'
-archivesBaseName = 'cctutorial'
+archivesBaseName = 'ccbx'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -32,7 +32,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                cctutorial {
+                ccbx {
                     source sourceSets.main
                 }
             }
@@ -49,7 +49,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                cctutorial {
+                ccbx {
                     source sourceSets.main
                 }
             }
@@ -66,10 +66,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'cctutorial', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'ccbx', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                cctutorial {
+                ccbx {
                     source sourceSets.main
                 }
             }
@@ -82,6 +82,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://squiddev.cc/maven/' }
+    maven { url 'https://cursemaven.com' }
 }
 
 dependencies {
@@ -90,7 +91,9 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    implementation fg.deobf("org.squiddev:cc-tweaked-1.19.1:${cc_version}")
+    implementation fg.deobf("org.squiddev:cc-tweaked-1.19.2:${cc_version}")
+    implementation fg.deobf("curse.maven:ballistix-443915:${ballistx_version}")
+    implementation fg.deobf("curse.maven:electrodynamics-316867:4518028")
 
 }
 
@@ -98,12 +101,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "cctutorial",
-                //"Specification-Vendor": "cctutorial authors",
+                "Specification-Title"     : "ccbx",
+                //"Specification-Vendor": "ccbx authors",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.version,
-                //"Implementation-Vendor": "cctutorial authors",
+                //"Implementation-Vendor": "ccbx authors",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

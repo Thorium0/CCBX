@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "ccbx:block/cc_ballistix_block_down",
+    "east": "ccbx:block/cc_ballistix_block_east",
+    "north": "ccbx:block/cc_ballistix_block_north",
+    "particle": "ccbx:block/cc_ballistix_block_north",
+    "south": "ccbx:block/cc_ballistix_block_south",
+    "up": "ccbx:block/cc_ballistix_block_up",
+    "west": "ccbx:block/cc_ballistix_block_west"
+  }
+}

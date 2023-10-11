@@ -1,16 +1,16 @@
-package de.srendi.cctutorial.cctutorial;
+package de.presti.ccbx.ccbx;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("cctutorial")
-public class CCtutorial {
+@Mod("ccbx")
+public class CCBX {
 
     // Our mod id
-    public static final String MODID = "cctutorial";
+    public static final String MODID = "ccbx";
 
-    public CCtutorial() {
+    public CCBX() {
         Registration.register();
         // Register ourselves for server and other game events we are interested in. Currently, we do not use any events
         MinecraftForge.EVENT_BUS.register(this);
