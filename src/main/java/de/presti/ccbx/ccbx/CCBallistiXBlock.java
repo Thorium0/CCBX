@@ -1,15 +1,13 @@
 package de.presti.ccbx.ccbx;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,5 +31,26 @@ public class CCBallistiXBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return Registration.CC_TILEENTITY.get().create(pos, state);
+    }
+
+    /**
+     * Allows the block entity to tick.
+     *
+     * @param level The level
+     * @param state The state
+     * @param type  The type
+     * @param <T>   The type
+     * @return The ticker
+     */
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            @NotNull Level level,
+            @NotNull BlockState state,
+            @NotNull BlockEntityType<T> type
+    ) {
+        return type == Registration.CC_TILEENTITY.get() && !level.isClientSide
+                ? (l, p, s, t) -> ((CCBallistiXTileEntity) t).tick()
+                : null;
     }
 }
