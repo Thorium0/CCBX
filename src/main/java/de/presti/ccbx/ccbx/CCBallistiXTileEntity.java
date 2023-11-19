@@ -1,12 +1,10 @@
 package de.presti.ccbx.ccbx;
 
-import ballistix.common.tile.TileMissileSilo;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import electrodynamics.prefab.tile.components.ComponentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -104,14 +102,11 @@ public class CCBallistiXTileEntity extends BlockEntity {
         tickCounter++;
 
         // Only move items every 10 ticks and if there is something to move
-        if (
-                tickCounter % 10 != 0 ||
-                        (inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty())
-        ) {
+        if (tickCounter % 10 != 0 || (inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty())) {
             return;
         }
 
-        var silo = getMissileSilo();
+        var silo = BallistixUtil.getMissileSilo(getLevel(), getBlockPos().above());
         if (silo == null) {
             return;
         }
@@ -121,45 +116,21 @@ public class CCBallistiXTileEntity extends BlockEntity {
             return;
         }
 
-        inventoryComponent.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP)
-                .ifPresent(wrapper -> {
-                    // Move the items from our inventory to the missile silo above us
-                    var ourMissileStack = inventory.getStackInSlot(0);
-                    var ourExplosiveStack = inventory.getStackInSlot(1);
-                    var theirMissileStack = wrapper.getStackInSlot(0);
-                    var theirExplosiveStack = wrapper.getStackInSlot(1);
+        inventoryComponent.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).ifPresent(wrapper -> {
+            // Move the items from our inventory to the missile silo above us
+            var ourMissileStack = inventory.getStackInSlot(0);
+            var ourExplosiveStack = inventory.getStackInSlot(1);
+            var theirMissileStack = wrapper.getStackInSlot(0);
+            var theirExplosiveStack = wrapper.getStackInSlot(1);
 
-                    if (theirMissileStack.isEmpty() || ourMissileStack.getItem() == theirMissileStack.getItem()) {
-                        var newStack = wrapper.insertItem(0, ourMissileStack, false);
-                        inventory.setStackInSlot(0, newStack);
-                    }
-                    if (theirExplosiveStack.isEmpty() || ourExplosiveStack.getItem() == theirExplosiveStack.getItem()) {
-                        var newStack = wrapper.insertItem(1, ourExplosiveStack, false);
-                        inventory.setStackInSlot(1, newStack);
-                    }
-                });
-    }
-
-    /**
-     * Get the missile silo above this block.
-     *
-     * @return The missile silo above this block or null if there is none
-     */
-    private TileMissileSilo getMissileSilo() {
-        Level level = getLevel();
-        if (level == null) {
-            return null;
-        }
-
-        BlockEntity blockEntity = level.getBlockEntity(getBlockPos().above());
-        if (blockEntity == null) {
-            return null;
-        }
-
-        if (blockEntity instanceof TileMissileSilo tileMissileSilo) {
-            return tileMissileSilo;
-        }
-
-        return null;
+            if (theirMissileStack.isEmpty() || ourMissileStack.getItem() == theirMissileStack.getItem()) {
+                var newStack = wrapper.insertItem(0, ourMissileStack, false);
+                inventory.setStackInSlot(0, newStack);
+            }
+            if (theirExplosiveStack.isEmpty() || ourExplosiveStack.getItem() == theirExplosiveStack.getItem()) {
+                var newStack = wrapper.insertItem(1, ourExplosiveStack, false);
+                inventory.setStackInSlot(1, newStack);
+            }
+        });
     }
 }

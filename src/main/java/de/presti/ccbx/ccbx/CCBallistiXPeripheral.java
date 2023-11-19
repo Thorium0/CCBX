@@ -1,18 +1,16 @@
 package de.presti.ccbx.ccbx;
 
-import ballistix.common.block.BlockMissileSilo;
+import ballistix.common.block.BlockExplosive;
+import ballistix.common.item.ItemMissile;
 import ballistix.common.tile.TileMissileSilo;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import electrodynamics.prefab.properties.Property;
-import electrodynamics.prefab.properties.PropertyType;
+import electrodynamics.common.blockitem.BlockItemDescriptable;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,22 +80,6 @@ public class CCBallistiXPeripheral implements IPeripheral {
         return tileEntity;
     }
 
-    private TileMissileSilo getMissileSilo() {
-        Level level = getTileEntity().getLevel();
-
-        if (level == null) return null;
-
-        BlockEntity blockEntity = level.getBlockEntity(getTileEntity().getBlockPos().above());
-
-        if (blockEntity == null) return null;
-
-        if (blockEntity instanceof TileMissileSilo tileMissileSilo) {
-            return tileMissileSilo;
-        }
-
-        return null;
-    }
-
     @LuaFunction(mainThread = true)
     public final boolean launch() {
 
@@ -106,6 +88,13 @@ public class CCBallistiXPeripheral implements IPeripheral {
         if (tileMissileSilo == null) return false;
 
         tileMissileSilo.shouldLaunch = true;
+
+        BlockPos targetPosition = tileMissileSilo.target.get();
+
+        for (IComputerAccess computerAccess : connectedComputers) {
+            computerAccess.queueEvent("ccbx_launch", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ());
+        }
+
         return true;
     }
 
@@ -116,7 +105,27 @@ public class CCBallistiXPeripheral implements IPeripheral {
     }
 
     @LuaFunction(mainThread = true)
-    public final String getExplosionTyp() {
+    public boolean getLaunchState() {
+        TileMissileSilo tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return false;
+
+        return tileMissileSilo.shouldLaunch;
+    }
+
+    @LuaFunction(mainThread = true)
+    public int getRange() {
+        TileMissileSilo tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return 0;
+
+        if (tileMissileSilo.range == null) return 0;
+
+        return tileMissileSilo.range.get();
+    }
+
+    @LuaFunction(mainThread = true)
+    public final String getExplosivTyp() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return "";
@@ -126,12 +135,15 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (explosive == null) return "";
 
-        return explosive.getItem().getDefaultInstance().getDisplayName().getString()
-                .replace("[", "").replace("]", "");
+        if (explosive.getItem() instanceof BlockItemDescriptable des && des.getBlock() instanceof BlockExplosive blockExplosive) {
+            return blockExplosive.explosive.tag();
+        }
+
+        return null;
     }
 
     @LuaFunction(mainThread = true)
-    public final int getExplosionAmount() {
+    public final int getExplosivAmount() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return 0;
@@ -148,15 +160,17 @@ public class CCBallistiXPeripheral implements IPeripheral {
     public final String getMissileTyp() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return "";
+        if (tileMissileSilo == null) return null;
 
         ComponentInventory inv = tileMissileSilo.getComponent(ComponentType.Inventory);
-        ItemStack missile = inv.getItem(0);
 
-        if (missile == null) return "";
+        ItemStack missileItem = inv.getItem(0);
 
-        return missile.getItem().getDefaultInstance().getDisplayName().getString()
-                .replace("[", "").replace("]", "");
+        if (missileItem.getItem() instanceof ItemMissile missile) {
+            return missile.missile.tag();
+        }
+
+        return null;
     }
 
     @LuaFunction(mainThread = true)
@@ -199,6 +213,10 @@ public class CCBallistiXPeripheral implements IPeripheral {
         if (tileMissileSilo == null) return;
 
         tileMissileSilo.target.set(new BlockPos(x, y, z));
+
+        for (IComputerAccess computerAccess : connectedComputers) {
+            computerAccess.queueEvent("ccbx_update_position", x, y, z);
+        }
     }
 
     @LuaFunction(mainThread = true)
@@ -218,6 +236,15 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (tileMissileSilo == null) return;
 
+
+        for (IComputerAccess computerAccess : connectedComputers) {
+            computerAccess.queueEvent("ccbx_update_frequency", freq);
+        }
+
         tileMissileSilo.frequency.set(freq);
+    }
+
+    public TileMissileSilo getMissileSilo() {
+        return BallistixUtil.getMissileSilo(getTileEntity().getLevel(), getTileEntity().getBlockPos().above());
     }
 }

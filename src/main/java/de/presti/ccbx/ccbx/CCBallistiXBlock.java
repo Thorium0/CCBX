@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class CCBallistiXBlock extends Block implements EntityBlock {
 
     public CCBallistiXBlock() {
-        super(Properties.of(Material.METAL).strength(5, 5));
+        super(Properties.of(Material.STONE).explosionResistance(5));
     }
 
     /**
