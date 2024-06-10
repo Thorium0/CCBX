@@ -49,7 +49,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String getType() {
-        return "silocontroller";
+        return "siloController";
     }
 
     /**
@@ -125,7 +125,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
     }
 
     @LuaFunction(mainThread = true)
-    public final String getExplosivTyp() {
+    public final String getExplosiveType() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return "";
@@ -143,7 +143,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
     }
 
     @LuaFunction(mainThread = true)
-    public final int getExplosivAmount() {
+    public final int getExplosiveAmount() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return 0;
@@ -157,7 +157,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
     }
 
     @LuaFunction(mainThread = true)
-    public final String getMissileTyp() {
+    public final String getMissileType() {
         TileMissileSilo tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return null;
