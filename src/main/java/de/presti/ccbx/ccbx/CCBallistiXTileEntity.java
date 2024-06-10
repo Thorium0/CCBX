@@ -1,7 +1,8 @@
 package de.presti.ccbx.ccbx;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.CapabilityInputType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -111,12 +112,12 @@ public class CCBallistiXTileEntity extends BlockEntity {
             return;
         }
 
-        var inventoryComponent = silo.getComponent(ComponentType.Inventory);
+        var inventoryComponent = silo.getComponent(IComponentType.Inventory);
         if (inventoryComponent == null) {
             return;
         }
 
-        inventoryComponent.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).ifPresent(wrapper -> {
+        inventoryComponent.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, CapabilityInputType.INPUT).ifPresent(wrapper -> {
             // Move the items from our inventory to the missile silo above us
             var ourMissileStack = inventory.getStackInSlot(0);
             var ourExplosiveStack = inventory.getStackInSlot(1);

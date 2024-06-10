@@ -2,7 +2,7 @@ package de.presti.ccbx.ccbx;
 
 import ballistix.common.block.BlockExplosive;
 import ballistix.common.item.ItemMissile;
-import electrodynamics.common.blockitem.BlockItemDescriptable;
+import electrodynamics.common.blockitem.types.BlockItemDescriptable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;

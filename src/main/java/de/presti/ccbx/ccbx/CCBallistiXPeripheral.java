@@ -6,8 +6,8 @@ import ballistix.common.tile.TileMissileSilo;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import electrodynamics.common.blockitem.BlockItemDescriptable;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.common.blockitem.types.BlockItemDescriptable;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -130,7 +130,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (tileMissileSilo == null) return "";
 
-        ComponentInventory inv = tileMissileSilo.getComponent(ComponentType.Inventory);
+        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return "";
@@ -148,7 +148,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (tileMissileSilo == null) return 0;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(ComponentType.Inventory);
+        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return 0;
@@ -162,7 +162,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (tileMissileSilo == null) return null;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(ComponentType.Inventory);
+        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
 
         ItemStack missileItem = inv.getItem(0);
 
@@ -179,7 +179,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         if (tileMissileSilo == null) return 0;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(ComponentType.Inventory);
+        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
         ItemStack missile = inv.getItem(0);
 
         if (missile == null) return 0;

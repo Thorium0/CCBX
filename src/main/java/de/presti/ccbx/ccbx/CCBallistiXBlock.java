@@ -7,8 +7,9 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
 public class CCBallistiXBlock extends Block implements EntityBlock {
 
     public CCBallistiXBlock() {
-        super(Properties.of(Material.STONE).explosionResistance(5));
+        super(BlockBehaviour.Properties.copy(Blocks.STONE).explosionResistance(5));
     }
 
     /**
