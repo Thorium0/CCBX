@@ -1,4 +1,4 @@
-# CC: BX
+# CC: BallistiX
 This is a mod based on the Peripheral Tutorial made from [Sirendii](https://github.com/SirEndii/CCTutorial).
 
 
