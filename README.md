@@ -1,14 +1,14 @@
 # CC: BallistiX
 
+NOTE: As of 1.21.1 this mod is an almost complete rewrite in neoforge by me.<br />
+~~This is a mod based on the Peripheral Tutorial made from [Sirendii](https://github.com/SirEndii/CCTutorial).~~ 
 
-This is a mod based on the Peripheral Tutorial made from [Sirendii](https://github.com/SirEndii/CCTutorial).
 
-
-This is a fork I made to update [the mod originally by DxsSucuk](https://github.com/DxsSucuk/CCBX), which adds a peripheral which allows control over the missile silo from the [BallistX](https://www.curseforge.com/minecraft/mc-mods/ballistix) mod.
+This is a ~~fork~~ "neoforge rewrite" I made to update [the mod originally by DxsSucuk](https://github.com/DxsSucuk/CCBX), which adds a peripheral which allows control over the missile silo from the [BallistX](https://www.curseforge.com/minecraft/mc-mods/ballistix) mod.
 
 Here is a link to [the original mod on Curseforge](https://www.curseforge.com/minecraft/mc-mods/cc-ballistx).
 
-Or you can grab a .jar of my fork [here](https://github.com/Thorium0/CCBX/releases/latest).
+You can grab a .jar of my mod [here](https://github.com/Thorium0/CCBX/releases/latest).
 
 
 To interact with BallistiX Silos with a Computer you will need to place the Silo Controller below the center block of the Silo.
