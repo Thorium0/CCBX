@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(CCBX.MOD_ID);
 
-    public static final DeferredBlock<Block> CC_BLOCK = registerBlock("cc_block", CCBXBlock::new);
+    public static final DeferredBlock<Block> CCBX_BLOCK = registerBlock("ccbx_block", CCBXBlock::new, List.of(blockItemOverride.appendHoverText));
 
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
@@ -54,12 +54,12 @@ public class ModBlocks {
             public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
                 if (blockItemOverrides.contains(blockItemOverride.appendShiftHoverText)) {
                     if (Screen.hasShiftDown())
-                        tooltipComponents.add(Component.translatable("tooltip.quantumtech."+ name +".shift_down"));
+                        tooltipComponents.add(Component.translatable("tooltip." + CCBX.MOD_ID + "." + name + ".shift_down"));
                     else
-                        tooltipComponents.add(Component.translatable("tooltip.quantumtech." + name));
+                        tooltipComponents.add(Component.translatable("tooltip." + CCBX.MOD_ID + "." + name));
 
                 } else if (blockItemOverrides.contains(blockItemOverride.appendHoverText))
-                    tooltipComponents.add(Component.translatable("tooltip.quantumtech." + name));
+                    tooltipComponents.add(Component.translatable("tooltip." + CCBX.MOD_ID + "." + name));
 
             }
         });

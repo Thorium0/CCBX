@@ -16,10 +16,10 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> CCBX_TAB = CREATIVE_MODE_TABS.register("ccbx_tab",
             () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(ModBlocks.CC_BLOCK))
+                    .icon(() -> new ItemStack(ModBlocks.CCBX_BLOCK))
                     .title(Component.translatable("creativetab.ccbx"))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModBlocks.CC_BLOCK);
+                        output.accept(ModBlocks.CCBX_BLOCK);
 
                     })
                     .build()

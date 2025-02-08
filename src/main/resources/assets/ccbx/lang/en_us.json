@@ -1,3 +1,6 @@
 {
-  "block.ccbx.cc_block": "Silo Controller"
+  "creativetab.ccbx": "CCBX",
+
+  "block.ccbx.ccbx_block": "Silo Controller",
+  "tooltip.ccbx.ccbx_block": "Place under the center block of a silo to control it."
 }

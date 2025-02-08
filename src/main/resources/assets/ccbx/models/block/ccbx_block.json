@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "ccbx:block/ccbx_block_down",
+    "east": "ccbx:block/ccbx_block_east",
+    "north": "ccbx:block/ccbx_block_north",
+    "particle": "ccbx:block/ccbx_block_north",
+    "south": "ccbx:block/ccbx_block_south",
+    "up": "ccbx:block/ccbx_block_up",
+    "west": "ccbx:block/ccbx_block_west"
+  }
+}

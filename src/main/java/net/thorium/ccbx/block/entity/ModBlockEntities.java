@@ -13,8 +13,8 @@ public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, CCBX.MOD_ID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CCBXTileEntity>> CC_TILEENTITY = 
-        BLOCK_ENTITIES.register("cc_block",
-            () -> BlockEntityType.Builder.of(CCBXTileEntity::new, ModBlocks.CC_BLOCK.get())
+        BLOCK_ENTITIES.register("ccbx_block",
+            () -> BlockEntityType.Builder.of(CCBXTileEntity::new, ModBlocks.CCBX_BLOCK.get())
                 .build(null));
 
     public static void register(IEventBus eventBus) {
