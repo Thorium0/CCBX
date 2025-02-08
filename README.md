@@ -1,29 +1,25 @@
-# CC: BallistiX
-This is a mod based on the Peripheral Tutorial made from [Sirendii](https://github.com/SirEndii/CCTutorial).
 
+Installation information
+=======
 
-This is a fork I made to update [the mod originally by DxsSucuk](https://github.com/DxsSucuk/CCBX), which adds a peripheral which allows control over the missile silo from the [BallistX](https://www.curseforge.com/minecraft/mc-mods/ballistix) mod.
+This template repository can be directly cloned to get you started with a new
+mod. Simply create a new repository cloned from this one, by following the
+instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 
-Here is a link to [the original mod on Curseforge](https://www.curseforge.com/minecraft/mc-mods/cc-ballistx).
+Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
 
-Or you can grab a .jar of my fork [here](https://github.com/Thorium0/CCBX/releases/latest).
+If at any point you are missing libraries in your IDE, or you've run into problems you can
+run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
+{this does not affect your code} and then start the process again.
 
+Mapping Names:
+============
+By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
+in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
+license. For the latest license text, refer to the mapping file itself, or the reference copy here:
+https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
 
-To interact with BallistiX Silos with a Computer you will need to place the Silo Controller below the center block of the Silo.
-After that you can access the peripheral, via its name "siloController" (e.g. peripheral.find("siloController"), or using the wrap function to get it from a direction (e.g. peripheral.wrap("top").
-
-
-
-The silo controller has these functions:
-
-- launch() & launchWithPosition(int x, int y, int z)
-
-- getFrequency() & setFrequency(int freq)
-
-- getPosition() & setPosition(int x, int y, int z)
-
-- getExplosiveType() & getExplosiveAmount()
-
-- getMissileType() & getMissileAmount()
-
- 
+Additional Resources: 
+==========
+Community Documentation: https://docs.neoforged.net/  
+NeoForged Discord: https://discord.neoforged.net/

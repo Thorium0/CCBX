@@ -1,4 +1,4 @@
-package de.presti.ccbx.ccbx;
+package net.thorium.ccbx.CC;
 
 import ballistix.common.block.BlockExplosive;
 import ballistix.common.item.ItemMissile;
@@ -11,6 +11,8 @@ import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
+import net.thorium.ccbx.block.entity.CCBXTileEntity;
+import net.thorium.ccbx.util.CCBXUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +24,7 @@ import java.util.Map;
 /**
  * Our peripheral class, this is the class where we will register functions for our block.
  */
-public class CCBallistiXPeripheral implements IPeripheral {
+public class CCBXPeripheral implements IPeripheral {
 
     /**
      * A list of all our connected computers. We need this for event usages.
@@ -32,12 +34,12 @@ public class CCBallistiXPeripheral implements IPeripheral {
     /**
      * This is our tile entity, we set the tile entity when we create a new peripheral. We use this tile entity to access the block or the world
      */
-    private final CCBallistiXTileEntity tileEntity;
+    private final CCBXTileEntity tileEntity;
 
     /**
      * @param tileEntity the tile entity of this peripheral
      */
-    public CCBallistiXPeripheral(CCBallistiXTileEntity tileEntity) {
+    public CCBXPeripheral(CCBXTileEntity tileEntity) {
         this.tileEntity = tileEntity;
     }
 
@@ -76,7 +78,7 @@ public class CCBallistiXPeripheral implements IPeripheral {
         connectedComputers.add(computer);
     }
 
-    public CCBallistiXTileEntity getTileEntity() {
+    public CCBXTileEntity getTileEntity() {
         return tileEntity;
     }
 
@@ -245,6 +247,6 @@ public class CCBallistiXPeripheral implements IPeripheral {
     }
 
     public TileMissileSilo getMissileSilo() {
-        return BallistixUtil.getMissileSilo(getTileEntity().getLevel(), getTileEntity().getBlockPos().above());
+        return CCBXUtil.getMissileSilo(getTileEntity().getLevel(), getTileEntity().getBlockPos().above());
     }
 }

@@ -1,26 +1,26 @@
-package de.presti.ccbx.ccbx;
+package net.thorium.ccbx.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.thorium.ccbx.block.ModBlocks;
+import net.thorium.ccbx.block.entity.CCBXTileEntity;
+import net.thorium.ccbx.block.entity.ModBlockEntities;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-/**
- * This is our block. To tell minecraft that this block has a block entity, we need to implement {@link EntityBlock}
- */
-public class CCBallistiXBlock extends Block implements EntityBlock {
+public class CCBXBlock extends Block implements EntityBlock {
 
-    public CCBallistiXBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.STONE).explosionResistance(5));
+    public CCBXBlock() {
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).explosionResistance(5));
     }
 
     /**
@@ -31,7 +31,7 @@ public class CCBallistiXBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return Registration.CC_TILEENTITY.get().create(pos, state);
+        return ModBlockEntities.CC_TILEENTITY.get().create(pos, state);
     }
 
     /**
@@ -50,8 +50,8 @@ public class CCBallistiXBlock extends Block implements EntityBlock {
             @NotNull BlockState state,
             @NotNull BlockEntityType<T> type
     ) {
-        return type == Registration.CC_TILEENTITY.get() && !level.isClientSide
-                ? (l, p, s, t) -> ((CCBallistiXTileEntity) t).tick()
+        return type == ModBlockEntities.CC_TILEENTITY.get() && !level.isClientSide
+                ? (l, p, s, t) -> ((CCBXTileEntity) t).tick()
                 : null;
     }
 }

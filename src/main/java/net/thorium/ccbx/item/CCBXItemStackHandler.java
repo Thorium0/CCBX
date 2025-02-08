@@ -1,10 +1,11 @@
-package de.presti.ccbx.ccbx;
+package net.thorium.ccbx.item;
 
 import ballistix.common.block.BlockExplosive;
 import ballistix.common.item.ItemMissile;
 import electrodynamics.common.blockitem.types.BlockItemDescriptable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.thorium.ccbx.block.entity.CCBXTileEntity;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,14 +15,14 @@ public class CCBXItemStackHandler extends ItemStackHandler {
     /**
      * The tile entity of the silo controller.
      */
-    private final CCBallistiXTileEntity tileEntity;
+    private final CCBXTileEntity tileEntity;
 
     /**
      * Creates a new item stack handler for a silo controller.
      *
      * @param tileEntity The tile entity of the silo controller
      */
-    public CCBXItemStackHandler(CCBallistiXTileEntity tileEntity) {
+    public CCBXItemStackHandler(CCBXTileEntity tileEntity) {
         super(2);
         this.tileEntity = tileEntity;
     }
@@ -34,7 +35,9 @@ public class CCBXItemStackHandler extends ItemStackHandler {
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
-        this.tileEntity.setChanged();
+        if (tileEntity != null) {
+            this.tileEntity.setChanged();
+        }
     }
 
     /**
@@ -67,7 +70,7 @@ public class CCBXItemStackHandler extends ItemStackHandler {
      * @return If the stack is valid for the slot
      */
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(@NotNull int slot, @NotNull ItemStack stack) {
         var item = stack.getItem();
 
         if (slot == 0) {
