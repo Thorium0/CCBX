@@ -1,21 +1,17 @@
 package net.thorium.ccbx.block;
 
-import com.google.common.collect.Sets;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.thorium.ccbx.CCBX;
 import net.thorium.ccbx.block.custom.CCBXBlock;
-import net.thorium.ccbx.block.entity.CCBXTileEntity;
 import net.thorium.ccbx.item.ModItems;
 
 import java.util.List;
