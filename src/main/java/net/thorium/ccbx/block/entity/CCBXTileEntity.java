@@ -1,9 +1,6 @@
 package net.thorium.ccbx.block.entity;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-
-import electrodynamics.prefab.tile.components.CapabilityInputType;
-import electrodynamics.prefab.tile.components.IComponentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -20,10 +17,14 @@ import net.thorium.ccbx.item.CCBXItemStackHandler;
 import net.thorium.ccbx.util.CCBXUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import voltaic.prefab.tile.components.IComponentType;
 
 public class CCBXTileEntity extends BlockEntity {
+
     private int tickCounter = 0;
-    private final CCBXItemStackHandler inventory = new CCBXItemStackHandler(this);
+    private final CCBXItemStackHandler inventory = new CCBXItemStackHandler(
+        this
+    );
     private final CCBXPeripheral peripheral;
 
     public CCBXTileEntity(BlockPos pos, BlockState state) {
@@ -32,12 +33,18 @@ public class CCBXTileEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void loadAdditional(
+        CompoundTag tag,
+        HolderLookup.Provider registries
+    ) {
         super.loadAdditional(tag, registries);
         try {
             CompoundTag data = tag.getCompound("Buffer");
             if (data.contains("Inventory")) {
-                inventory.deserializeNBT(registries, data.getCompound("Inventory"));
+                inventory.deserializeNBT(
+                    registries,
+                    data.getCompound("Inventory")
+                );
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +52,10 @@ public class CCBXTileEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveAdditional(
+        CompoundTag tag,
+        HolderLookup.Provider registries
+    ) {
         super.saveAdditional(tag, registries);
         CompoundTag data = new CompoundTag();
         data.put("Inventory", inventory.serializeNBT(registries));
@@ -67,7 +77,11 @@ public class CCBXTileEntity extends BlockEntity {
     public void tick() {
         tickCounter++;
 
-        if (tickCounter % 10 != 0 || (inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty())) {
+        if (
+            tickCounter % 10 != 0 ||
+            (inventory.getStackInSlot(0).isEmpty() &&
+                inventory.getStackInSlot(1).isEmpty())
+        ) {
             return;
         }
 
@@ -76,7 +90,7 @@ public class CCBXTileEntity extends BlockEntity {
             return;
         }
 
-        var inventoryComponent = silo.getComponent(IComponentType.Inventory);
+        var inventoryComponent = CCBXUtil.getInventory(silo);
         if (inventoryComponent == null) {
             return;
         }
@@ -87,12 +101,26 @@ public class CCBXTileEntity extends BlockEntity {
             ItemStack theirMissileStack = handler.getStackInSlot(0);
             ItemStack theirExplosiveStack = handler.getStackInSlot(1);
 
-            if (theirMissileStack.isEmpty() || ourMissileStack.getItem() == theirMissileStack.getItem()) {
-                ItemStack newStack = handler.insertItem(0, ourMissileStack, false);
+            if (
+                theirMissileStack.isEmpty() ||
+                ourMissileStack.getItem() == theirMissileStack.getItem()
+            ) {
+                ItemStack newStack = handler.insertItem(
+                    0,
+                    ourMissileStack,
+                    false
+                );
                 inventory.setStackInSlot(0, newStack);
             }
-            if (theirExplosiveStack.isEmpty() || ourExplosiveStack.getItem() == theirExplosiveStack.getItem()) {
-                ItemStack newStack = handler.insertItem(1, ourExplosiveStack, false);
+            if (
+                theirExplosiveStack.isEmpty() ||
+                ourExplosiveStack.getItem() == theirExplosiveStack.getItem()
+            ) {
+                ItemStack newStack = handler.insertItem(
+                    1,
+                    ourExplosiveStack,
+                    false
+                );
                 inventory.setStackInSlot(1, newStack);
             }
         }

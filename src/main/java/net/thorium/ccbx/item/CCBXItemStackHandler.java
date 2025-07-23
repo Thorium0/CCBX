@@ -2,11 +2,11 @@ package net.thorium.ccbx.item;
 
 import ballistix.common.block.BlockExplosive;
 import ballistix.common.item.ItemMissile;
-import electrodynamics.common.blockitem.types.BlockItemDescriptable;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.thorium.ccbx.block.entity.CCBXTileEntity;
 import org.jetbrains.annotations.NotNull;
+import voltaic.common.blockitem.BlockItemDescriptable;
 
 /**
  * Item stack handler of a silo controller.

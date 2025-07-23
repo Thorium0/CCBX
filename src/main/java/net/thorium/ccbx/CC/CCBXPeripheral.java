@@ -2,24 +2,26 @@ package net.thorium.ccbx.CC;
 
 import ballistix.common.block.BlockExplosive;
 import ballistix.common.item.ItemMissile;
-import ballistix.common.tile.TileMissileSilo;
+import ballistix.common.tile.TileVerticalLaunchSilo;
+import ballistix.common.tile.silo.TileLauncherPlatformT1;
+import ballistix.common.tile.silo.TileLauncherPlatformT2;
+import ballistix.common.tile.silo.TileLauncherPlatformT3;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import electrodynamics.common.blockitem.types.BlockItemDescriptable;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.thorium.ccbx.block.entity.CCBXTileEntity;
-import net.thorium.ccbx.util.CCBXUtil;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.thorium.ccbx.block.entity.CCBXTileEntity;
+import net.thorium.ccbx.util.CCBXUtil;
+import voltaic.common.blockitem.BlockItemDescriptable;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentInventory;
 
 /**
  * Our peripheral class, this is the class where we will register functions for our block.
@@ -84,17 +86,25 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public final boolean launch() {
+        Object tileSilo = getMissileSilo();
 
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        if (tileSilo == null) return false;
 
-        if (tileMissileSilo == null) return false;
+        if (!CCBXUtil.setLaunchState(tileSilo, true)) {
+            return false;
+        }
 
-        tileMissileSilo.shouldLaunch = true;
+        BlockPos targetPosition = CCBXUtil.getTarget(tileSilo);
 
-        BlockPos targetPosition = tileMissileSilo.target.get();
-
-        for (IComputerAccess computerAccess : connectedComputers) {
-            computerAccess.queueEvent("ccbx_launch", targetPosition.getX(), targetPosition.getY(), targetPosition.getZ());
+        if (targetPosition != null) {
+            for (IComputerAccess computerAccess : connectedComputers) {
+                computerAccess.queueEvent(
+                    "ccbx_launch",
+                    targetPosition.getX(),
+                    targetPosition.getY(),
+                    targetPosition.getZ()
+                );
+            }
         }
 
         return true;
@@ -108,37 +118,40 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public boolean getLaunchState() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return false;
+        if (tileSilo == null) return false;
 
-        return tileMissileSilo.shouldLaunch;
+        return CCBXUtil.getLaunchState(tileSilo);
     }
 
     @LuaFunction(mainThread = true)
     public int getRange() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return 0;
+        if (tileSilo == null) return 0;
 
-        if (tileMissileSilo.range == null) return 0;
-
-        return tileMissileSilo.range.get();
+        return CCBXUtil.getRange(tileSilo);
     }
 
     @LuaFunction(mainThread = true)
     public final String getExplosiveType() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return "";
+        if (tileSilo == null) return "";
 
-        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+        ComponentInventory inv = CCBXUtil.getInventory(tileSilo);
+
+        if (inv == null) return "";
+
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return "";
-
-        if (explosive.getItem() instanceof BlockItemDescriptable des && des.getBlock() instanceof BlockExplosive blockExplosive) {
-            return blockExplosive.explosive.tag();
+        if (
+            explosive.getItem() instanceof BlockItemDescriptable des &&
+            des.getBlock() instanceof BlockExplosive blockExplosive
+        ) {
+            return blockExplosive.explosive.getExplosiveItem().get().toString();
         }
 
         return null;
@@ -146,11 +159,24 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public final int getExplosiveAmount() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return 0;
+        if (tileSilo == null) return 0;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+        ComponentInventory inv = null;
+
+        if (tileSilo instanceof TileVerticalLaunchSilo vls) {
+            inv = vls.getComponent(IComponentType.Inventory);
+        } else if (tileSilo instanceof TileLauncherPlatformT1 t1) {
+            inv = t1.getComponent(IComponentType.Inventory);
+        } else if (tileSilo instanceof TileLauncherPlatformT2 t2) {
+            inv = t2.getComponent(IComponentType.Inventory);
+        } else if (tileSilo instanceof TileLauncherPlatformT3 t3) {
+            inv = t3.getComponent(IComponentType.Inventory);
+        }
+
+        if (inv == null) return 0;
+
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return 0;
@@ -160,16 +186,22 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public final String getMissileType() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return null;
+        if (tileSilo == null) return null;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+        ComponentInventory inv = CCBXUtil.getInventory(tileSilo);
+
+        if (inv == null) return null;
 
         ItemStack missileItem = inv.getItem(0);
 
         if (missileItem.getItem() instanceof ItemMissile missile) {
-            return missile.missile.tag();
+            return (
+                missile.getCreatorModId(missileItem) +
+                ":" +
+                missile.missile.tag()
+            );
         }
 
         return null;
@@ -177,11 +209,14 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public final int getMissileAmount() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return 0;
+        if (tileSilo == null) return 0;
 
-        ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+        ComponentInventory inv = CCBXUtil.getInventory(tileSilo);
+
+        if (inv == null) return 0;
+
         ItemStack missile = inv.getItem(0);
 
         if (missile == null) return 0;
@@ -193,28 +228,28 @@ public class CCBXPeripheral implements IPeripheral {
     public final Map<String, Object> getPosition() {
         Map<String, Object> info = new HashMap<>();
 
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileSilo = getMissileSilo();
 
-        if (tileMissileSilo == null) return info;
+        if (tileSilo == null) return info;
 
-        if (tileMissileSilo.target == null) return info;
+        BlockPos position = CCBXUtil.getTarget(tileSilo);
 
-        BlockPos position = tileMissileSilo.target.get();
-
-        info.put("x", position.getX());
-        info.put("y", position.getY());
-        info.put("z", position.getZ());
+        if (position != null) {
+            info.put("x", position.getX());
+            info.put("y", position.getY());
+            info.put("z", position.getZ());
+        }
 
         return info;
     }
 
     @LuaFunction(mainThread = true)
     public final void setPosition(int x, int y, int z) {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return;
 
-        tileMissileSilo.target.set(new BlockPos(x, y, z));
+        CCBXUtil.setTarget(tileMissileSilo, new BlockPos(x, y, z));
 
         for (IComputerAccess computerAccess : connectedComputers) {
             computerAccess.queueEvent("ccbx_update_position", x, y, z);
@@ -223,30 +258,48 @@ public class CCBXPeripheral implements IPeripheral {
 
     @LuaFunction(mainThread = true)
     public final int getFrequency() {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return 0;
 
-        if (tileMissileSilo.frequency == null) return 0;
-
-        return tileMissileSilo.frequency.get();
+        return CCBXUtil.getFrequency(tileMissileSilo);
     }
 
     @LuaFunction(mainThread = true)
     public final void setFrequency(int freq) {
-        TileMissileSilo tileMissileSilo = getMissileSilo();
+        Object tileMissileSilo = getMissileSilo();
 
         if (tileMissileSilo == null) return;
-
 
         for (IComputerAccess computerAccess : connectedComputers) {
             computerAccess.queueEvent("ccbx_update_frequency", freq);
         }
 
-        tileMissileSilo.frequency.set(freq);
+        CCBXUtil.setFrequency(tileMissileSilo, freq);
     }
 
-    public TileMissileSilo getMissileSilo() {
-        return CCBXUtil.getMissileSilo(getTileEntity().getLevel(), getTileEntity().getBlockPos().above());
+    @LuaFunction(mainThread = true)
+    public final double getPower() {
+        Object tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return -1;
+
+        return CCBXUtil.getPower(tileMissileSilo);
+    }
+
+    @LuaFunction(mainThread = true)
+    public final double getMaxPower() {
+        Object tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return -1;
+
+        return CCBXUtil.getMaxPower(tileMissileSilo);
+    }
+
+    public Object getMissileSilo() {
+        return CCBXUtil.getMissileSilo(
+            getTileEntity().getLevel(),
+            getTileEntity().getBlockPos().above()
+        );
     }
 }
