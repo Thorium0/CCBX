@@ -28,4 +28,6 @@ The silo controller has these functions:
 
 - getMissileType() & getMissileAmount()
 
+- getPower() & getMaxPower()
+
  
