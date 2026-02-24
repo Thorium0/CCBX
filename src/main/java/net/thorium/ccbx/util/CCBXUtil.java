@@ -1,7 +1,6 @@
 package net.thorium.ccbx.util;
 
 import ballistix.api.silo.ILauncherControlPanel;
-import ballistix.common.settings.BallistixConstants;
 import ballistix.common.tile.TileVerticalLaunchSilo;
 import ballistix.common.tile.silo.TileLauncherControlPanelT1;
 import ballistix.common.tile.silo.TileLauncherControlPanelT2;
@@ -9,6 +8,8 @@ import ballistix.common.tile.silo.TileLauncherControlPanelT3;
 import ballistix.common.tile.silo.TileLauncherPlatformT1;
 import ballistix.common.tile.silo.TileLauncherPlatformT2;
 import ballistix.common.tile.silo.TileLauncherPlatformT3;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -451,8 +452,7 @@ public class CCBXUtil {
                     return false; // No power system
                 }
                 double powerRequired =
-                    BallistixConstants.MISSILESILO_USAGE *
-                    (double) panel.getTier();
+                    getMissileSiloUsage() * (double) panel.getTier();
                 if (electro.getJoulesStored() < powerRequired) {
                     return false; // Insufficient power
                 }
@@ -477,7 +477,7 @@ public class CCBXUtil {
                     return false; // No power system
                 }
                 double powerRequired =
-                    BallistixConstants.MISSILESILO_USAGE * panel.getTier();
+                    getMissileSiloUsage() * panel.getTier();
                 if (electro.getJoulesStored() < powerRequired) {
                     return false;
                 }
@@ -500,7 +500,7 @@ public class CCBXUtil {
                     return false; // No power system
                 }
                 double powerRequired =
-                    BallistixConstants.MISSILESILO_USAGE * panel.getTier();
+                    getMissileSiloUsage() * panel.getTier();
                 if (electro.getJoulesStored() < powerRequired) {
                     return false;
                 }
@@ -537,7 +537,7 @@ public class CCBXUtil {
             }
 
             // Vertical launch silo is tier 1
-            double powerRequired = BallistixConstants.MISSILESILO_USAGE;
+            double powerRequired = getMissileSiloUsage();
             if (electro.getJoulesStored() < powerRequired) {
                 return false; // Insufficient power
             }
@@ -560,5 +560,46 @@ public class CCBXUtil {
         } catch (Exception e) {
             return false; // Validation failed
         }
+    }
+
+    private static double getMissileSiloUsage() {
+        // Ballistix 0.9 style: BallistixConstants.MISSILESILO_USAGE
+        try {
+            Class<?> constantsClass = Class.forName(
+                "ballistix.common.settings.BallistixConstants"
+            );
+            Field usageField = constantsClass.getField("MISSILESILO_USAGE");
+            Object value = usageField.get(null);
+            if (value instanceof Number number) {
+                return number.doubleValue();
+            }
+        } catch (Throwable ignored) {}
+
+        // Ballistix 1.0 style: BallistixConfig.INSTANCE.MISSILESILO_USAGE.get()
+        try {
+            Class<?> configClass = Class.forName(
+                "ballistix.common.settings.BallistixConfig"
+            );
+            Field instanceField = configClass.getField("INSTANCE");
+            Object instance = instanceField.get(null);
+            if (instance != null) {
+                Field usageField = configClass.getField("MISSILESILO_USAGE");
+                Object usageConfigValue = usageField.get(instance);
+                if (usageConfigValue instanceof Number number) {
+                    return number.doubleValue();
+                }
+                if (usageConfigValue != null) {
+                    Method getMethod = usageConfigValue
+                        .getClass()
+                        .getMethod("get");
+                    Object value = getMethod.invoke(usageConfigValue);
+                    if (value instanceof Number number) {
+                        return number.doubleValue();
+                    }
+                }
+            }
+        } catch (Throwable ignored) {}
+
+        return 10000; // Default fallback value if reflection fails
     }
 }
