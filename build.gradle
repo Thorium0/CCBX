@@ -143,7 +143,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation "maven.modrinth:ballistix:${ballistx_version}"
-    implementation "maven.modrinth:electrodynamics:${electrodynamics_version}"
     implementation "maven.modrinth:voltaic:${voltaic_version}"
 
     compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cc_version}")
