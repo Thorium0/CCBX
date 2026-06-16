@@ -16,7 +16,6 @@ public class CCBX {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         Registration.register(modEventBus);
-        modEventBus.addListener(Registration::addCreative);
         // Register ourselves for server and other game events we are interested in. Currently, we do not use any events
         MinecraftForge.EVENT_BUS.register(this);
     }

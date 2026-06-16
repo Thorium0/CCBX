@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'dk.thoriumserver.ccbx'
-version = '1.3'
+version = '1.4'
 archivesBaseName = 'ccbx'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

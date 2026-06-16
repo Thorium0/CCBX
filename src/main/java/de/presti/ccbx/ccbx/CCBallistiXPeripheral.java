@@ -8,6 +8,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import electrodynamics.common.blockitem.types.BlockItemDescriptable;
 import electrodynamics.prefab.tile.components.IComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -131,6 +132,9 @@ public class CCBallistiXPeripheral implements IPeripheral {
         if (tileMissileSilo == null) return "";
 
         ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+
+        if (inv == null) return "";
+
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return "";
@@ -149,6 +153,9 @@ public class CCBallistiXPeripheral implements IPeripheral {
         if (tileMissileSilo == null) return 0;
 
         ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+
+        if (inv == null) return 0;
+
         ItemStack explosive = inv.getItem(1);
 
         if (explosive == null) return 0;
@@ -164,7 +171,11 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
 
+        if (inv == null) return null;
+
         ItemStack missileItem = inv.getItem(0);
+
+        if (missileItem == null) return null;
 
         if (missileItem.getItem() instanceof ItemMissile missile) {
             return missile.missile.tag();
@@ -180,6 +191,9 @@ public class CCBallistiXPeripheral implements IPeripheral {
         if (tileMissileSilo == null) return 0;
 
         ComponentInventory inv = tileMissileSilo.getComponent(IComponentType.Inventory);
+
+        if (inv == null) return 0;
+
         ItemStack missile = inv.getItem(0);
 
         if (missile == null) return 0;
@@ -199,9 +213,11 @@ public class CCBallistiXPeripheral implements IPeripheral {
 
         BlockPos position = tileMissileSilo.target.get();
 
-        info.put("x", position.getX());
-        info.put("y", position.getY());
-        info.put("z", position.getZ());
+        if (position != null) {
+            info.put("x", position.getX());
+            info.put("y", position.getY());
+            info.put("z", position.getZ());
+        }
 
         return info;
     }
@@ -242,6 +258,32 @@ public class CCBallistiXPeripheral implements IPeripheral {
         }
 
         tileMissileSilo.frequency.set(freq);
+    }
+
+    @LuaFunction(mainThread = true)
+    public final double getPower() {
+        TileMissileSilo tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return -1;
+
+        ComponentElectrodynamic electro = tileMissileSilo.getComponent(IComponentType.Electrodynamic);
+
+        if (electro == null) return -1;
+
+        return electro.getJoulesStored();
+    }
+
+    @LuaFunction(mainThread = true)
+    public final double getMaxPower() {
+        TileMissileSilo tileMissileSilo = getMissileSilo();
+
+        if (tileMissileSilo == null) return -1;
+
+        ComponentElectrodynamic electro = tileMissileSilo.getComponent(IComponentType.Electrodynamic);
+
+        if (electro == null) return -1;
+
+        return electro.getMaxJoulesStored();
     }
 
     public TileMissileSilo getMissileSilo() {

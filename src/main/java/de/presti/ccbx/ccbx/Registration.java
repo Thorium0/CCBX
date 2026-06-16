@@ -1,12 +1,14 @@
 package de.presti.ccbx.ccbx;
 
 import com.google.common.collect.Sets;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -19,6 +21,7 @@ public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CCBX.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CCBX.MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, CCBX.MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CCBX.MODID);
 
     // Blocks
     public static final RegistryObject<Block> CC_BLOCK = register("cc_ballistix_block", CCBallistiXBlock::new);
@@ -29,11 +32,13 @@ public class Registration {
         return registryObject;
     }
 
-    public static void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
-            event.accept(CC_BLOCK);
-        }
-    }
+    // Creative tab
+    public static final RegistryObject<CreativeModeTab> CCBX_TAB = CREATIVE_MODE_TABS.register("ccbx_tab",
+            () -> CreativeModeTab.builder()
+                    .icon(() -> new ItemStack(CC_BLOCK.get()))
+                    .title(Component.translatable("creativetab.ccbx"))
+                    .displayItems((parameters, output) -> output.accept(CC_BLOCK.get()))
+                    .build());
 
     // Tile Entities
     public static final RegistryObject<BlockEntityType<CCBallistiXTileEntity>> CC_TILEENTITY = Registration.BLOCK_ENTITIES.register("cc_ballistix_block", () -> new BlockEntityType<>(CCBallistiXTileEntity::new, Sets.newHashSet(CC_BLOCK.get()), null));
@@ -43,5 +48,6 @@ public class Registration {
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
+        CREATIVE_MODE_TABS.register(eventBus);
     }
 }

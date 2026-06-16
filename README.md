@@ -26,4 +26,7 @@ The silo controller has these functions:
 
 - getMissileType() & getMissileAmount()
 
+- getPower() & getMaxPower()
+  - Returns the joules currently stored / the maximum joules the silo can store. Returns -1 if the silo has no power component.
+
  
